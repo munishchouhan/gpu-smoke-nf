@@ -12,6 +12,10 @@ nextflow.enable.dsl=2
 process GPU_CHECK {
     tag "gpu-smoke"
     container 'nvidia/cuda:12.4.1-base-ubuntu22.04'
+    // --gpus all is required: Nextflow's `accelerator` directive translates to
+    // AWS Batch resourceRequirements but does NOT add --gpus to the docker CLI
+    // when running through Seqera Platform's AWS Cloud + Fusion launcher.
+    containerOptions '--gpus all'
     cpus 1
     memory '2.GB'
     accelerator 1
